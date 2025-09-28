@@ -1,0 +1,3 @@
+[submodule "src/ubicoders_vrobots_ipc/vrobots_msgs"]
+	path = src/ubicoders_vrobots_ipc/vrobots_msgs
+	url = https://github.com/ubicoders0/vrobots_msgs

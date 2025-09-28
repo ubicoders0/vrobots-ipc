@@ -11,8 +11,6 @@ setup(
     url="https://github.com/ubicoders0/vrobots-ipc",
     keywords="ubicoders virtual robots ipc for pc",
     install_requires=[
-        "websockets",
-        "websocket-client",
         "numpy",
         "flatbuffers==23.5.26",
         "fastapi",
@@ -32,6 +30,8 @@ setup(
         "ipykernel",
         "jupyterlab",
         "ipympl",
+        "iceoryx2==0.7.0",
+        "eclipse-zenoh==1.5.1",
     ],
 )
 

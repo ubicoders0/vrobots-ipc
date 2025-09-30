@@ -19,3 +19,6 @@ jupyterlab
 ipympl
 iceoryx2==0.7.0
 eclipse-zenoh==1.5.1
+vrobots-msgs==2.0.0
+opencv-python
+opencv-contrib-python

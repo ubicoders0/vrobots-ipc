@@ -32,6 +32,8 @@ setup(
         "ipympl",
         "iceoryx2==0.7.0",
         "eclipse-zenoh==1.5.1",
+        "opencv-python",
+        "opencv-contrib-python"
     ],
 )
 

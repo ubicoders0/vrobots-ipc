@@ -44,15 +44,19 @@ class VRobotNodeBase:
         self.iox2_node.create_image_subscriber("down", self.image_resolution)
 
         self.state = VRobotState()
-        self.imgStateLeft = get_image_state_type(self.image_resolution)()
-        self.imgStateRight = get_image_state_type(self.image_resolution)()
-        self.imgStateDown = get_image_state_type(self.image_resolution)()
         
+        # self.imgStateLeft = get_image_state_type(self.image_resolution)()
+        # self.imgStateRight = get_image_state_type(self.image_resolution)()
+        # self.imgStateDown = get_image_state_type(self.image_resolution)()
+        self.imgStates = dict()
 
-    # def initialize(self):
-    #     return VRobotState(), ImageState720p(), ImageState720p(), ImageState720p()
 
+    def register_img_subscriber(self, cam_side:str):
+        self.iox2_node.create_image_subscriber(cam_side, self.image_resolution)
+        self.imgStates[cam_side] = get_image_state_type(self.image_resolution)()
+        return self.imgStates[cam_side]
 
+        
     def states_listener(self, sample: any):
         try:
             topic: str = sample.key_expr
@@ -70,7 +74,7 @@ class VRobotNodeBase:
             if len(self.states) > self.max_states_history:
                 self.states.pop(0)
 
-            
+
         except Exception as e:
             self.shutdown()
             print(f"[VRobotNode] Error in states_listener for sysId={self.sysId}: {e}")
@@ -86,11 +90,15 @@ class VRobotNodeBase:
             print(f"[VRobotNode] Exception in read_new_states for sysId={self.sysId}:", flush=True)
             return False, VRobotState()
 
-    def read_new_image(self, cam_side:str, prev_img_state: ImageState720p = None) -> Tuple[bool, Optional[ImageState720p]]:
+    def read_new_image(self, cam_side:str) -> Tuple[bool, Optional[ImageState720p]]:
         img_state = self.iox2_node.get_image_data(cam_side, self.image_resolution)
         if img_state is None:
             return False, get_image_state_type(self.image_resolution)()
-        return img_state.ts > prev_img_state.ts, img_state
+        if (img_state.ts > self.imgStates[cam_side].ts):
+            self.imgStates[cam_side] = img_state
+            return True, img_state
+        return False, img_state
+
 
     def publish_cmd(self, cmd_data: bytes):
         self.zenoh_node.publish(f"vr/{self.sysId}/cmd", cmd_data)

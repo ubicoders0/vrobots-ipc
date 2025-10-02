@@ -78,9 +78,6 @@ class ImageData1080p(ctypes.Structure):
         return "ImageData1080p"  # Matches C++ IOX2_TYPE_NAME
 
 
-
-
-
 class BaseImageState:
     def __init__(self, ts: ctypes.c_uint64 = 0, image_data=None, flip_mode: int = 0,
                  width: int = 0, height: int = 0, channels: int = 4):

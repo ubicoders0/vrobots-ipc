@@ -135,7 +135,7 @@ class VRobotNodeBase:
             return False
 
     def read_new_image(self, cam_side:str) -> Tuple[bool]:
-        print(f"imgResolution keys: {self.imgResolution.keys()}")
+        # print(f"imgResolution keys: {self.imgResolution.keys()}")
         img_state = self.iox2_node.get_image_data(cam_side, self.imgResolution[cam_side])
         if img_state is None:
             return False

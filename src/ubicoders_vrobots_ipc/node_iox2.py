@@ -71,7 +71,7 @@ class Iox2Node:
 
                 header = sample.user_header().contents
                 body = sample.payload().contents
-                timestamp = header.timestamp
+                timestamp = header.timestamp / 10e5 # make it millis  
                 image_data = body.image_data
                 
                 flip_mode = body.flip_mode        

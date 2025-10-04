@@ -81,12 +81,14 @@ class ImageData1080p(ctypes.Structure):
 class BaseImageState:
     def __init__(self, ts: ctypes.c_uint64 = 0, image_data=None, flip_mode: int = 0,
                  width: int = 0, height: int = 0, channels: int = 4):
-        self.ts = ts
-        self.flip_mode = flip_mode
-        self.width, self.height, self.channels = width, height, channels
+        self.ts: ctypes.c_uint64 = ts
+        self.flip_mode: int = flip_mode
+        self.width: int = width
+        self.height: int = height
+        self.channels: int = channels
+        self.image_data: np.ndarray = np.zeros((self.height, self.width, self.channels), dtype=np.uint8)
         try:
             if image_data is None:
-                self.image_data = np.zeros((self.height, self.width, self.channels), dtype=np.uint8)
                 return
 
             img_rgba = np.ctypeslib.as_array(image_data).reshape(
@@ -101,18 +103,18 @@ class BaseImageState:
                 img_rgba = cv2.flip(img_rgba, -1)
 
             # store the converted image - copy
-            self.image_data = cv2.cvtColor(img_rgba, cv2.COLOR_RGBA2BGR)
+            self.image_data: np.ndarray = cv2.cvtColor(img_rgba, cv2.COLOR_RGBA2BGR)
 
         except Exception:
             # only print traceback when there IS an exception
             print(f"[{self.__class__.__name__}] Error ts={ts}")
             traceback.print_exc()
-            self.image_data = np.zeros((self.height, self.width, self.channels), dtype=np.uint8)
+            self.image_data: np.ndarray = np.zeros((self.height, self.width, self.channels), dtype=np.uint8)
 
 # Subclasses for specific resolutions
-class ImageState320p(BaseImageState):
+class ImageState360p(BaseImageState):
     def __init__(self, ts: ctypes.c_uint64 = 0, image_data=None, flip_mode: int = 0):
-        super().__init__(ts, image_data, flip_mode, width=480, height=320, channels=4)
+        super().__init__(ts, image_data, flip_mode, width=640, height=360, channels=4)
 
 
 class ImageState720p(BaseImageState):
@@ -129,7 +131,7 @@ class ImageState1080p(BaseImageState):
 
 
 class ImageResolution(Enum):
-    P320 = (480, 320, 4)
+    P360 = (640, 360, 4)
     P720 = (1280, 720, 4)
     P1080 = (1920, 1080, 4)
 
@@ -146,17 +148,17 @@ class ImageResolution(Enum):
 
 
 def get_image_state_type(image_resolution: ImageResolution):
-    if image_resolution == ImageResolution.P320:
-        return ImageState320p
+    if image_resolution == ImageResolution.P360:
+        return ImageState360p
     elif image_resolution == ImageResolution.P720:
         return ImageState720p
     elif image_resolution == ImageResolution.P1080:
         return ImageState1080p
     else:
-        raise ValueError(f"Unsupported image_resolution '{image_resolution}'; must be ImageResolution.P320, P720, or P1080")    
+        raise ValueError(f"Unsupported image_resolution '{image_resolution}'; must be ImageResolution.6020, P720, or P1080")    
 
 def get_payload_type(image_resolution: ImageResolution):
-    if image_resolution == ImageResolution.P320:
+    if image_resolution == ImageResolution.P360:
         # NOTE: Your C++ type is 360p; keep this if C++ publishes 360p.
         return ImageData360p
     elif image_resolution == ImageResolution.P720:

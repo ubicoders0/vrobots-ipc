@@ -136,7 +136,7 @@ def start_rtg(
     channels: int = 3,
     fps: int = 50,
     buffer_secs: float = 6.0,
-    topic: str = "vr/rtg",
+    topic: str = "vr/0/rtg",
     labels: Optional[Sequence[str]] = None,
     background: str = "k",
     start_event_loop: bool = True,
@@ -189,8 +189,7 @@ def stop_rtg(session, subscriber):
     finally:
         session.close()
 
-# --- Script mode -------------------------------------------------------------
-if __name__ == "__main__":
+def main():
     """CLI entrypoint: parse args and run the viewer (blocking)."""
     parser = argparse.ArgumentParser(
         description="Real-time multi-channel plotter using PyQtGraph + Zenoh"
@@ -201,8 +200,8 @@ if __name__ == "__main__":
                         help="Qt redraw rate [default: 50]")
     parser.add_argument("-b", "--buffer-secs", type=float, default=6.0,
                         help="Time window length in seconds [default: 6.0]")
-    parser.add_argument("-t", "--topic", type=str, default="vr/rtg",
-                        help="Zenoh topic to subscribe to [default: vr/rtg]")
+    parser.add_argument("-t", "--topic", type=str, default="vr/0/rtg",
+                        help="Zenoh topic to subscribe to [default: vr/0/rtg]")
     parser.add_argument("--background", type=str, default="k",
                         help="Plot background color [default: 'k']")
     args = parser.parse_args()
@@ -216,3 +215,7 @@ if __name__ == "__main__":
         background=args.background,
         start_event_loop=True,
     )
+
+# --- Script mode -------------------------------------------------------------
+if __name__ == "__main__":
+    main()

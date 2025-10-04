@@ -23,6 +23,8 @@ def on_reply(reply):
     global RECVE_SIGNAL
     RECVE_SIGNAL = True
 
+    
+
 def main():
     # open session (defaults are fine; set ZENOH_* env vars if needed)
     with zenoh.open(zenoh.Config()) as session:

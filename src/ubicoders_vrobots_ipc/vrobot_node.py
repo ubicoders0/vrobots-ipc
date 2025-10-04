@@ -87,7 +87,7 @@ class VRobotNodeBase:
         self.iox2_node.create_image_subscriber(cam_side, img_res )
         self.imgStates[cam_side] = get_image_state_type(img_res)()
         self.imgResolution[cam_side] = img_res
-        print(f"imgResolution keys: {self.imgResolution.keys()}")
+        # print(f"imgResolution keys: {self.imgResolution.keys()}")
         return self.imgStates[cam_side]
 
         
